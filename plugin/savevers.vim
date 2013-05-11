@@ -222,6 +222,12 @@ else
    let s:max_ver = 9999
 endif
 
+if exists("savevers_hierarchical")
+  let s:hierarchical = savevers_hierarchical
+else
+  let s:hierarchical = 0
+endif
+
 
 " Determine how many characters are in s:max_ver, so that
 " we can insert an appropriate number of leading zeroes.
@@ -237,9 +243,11 @@ endfunction
 
 function! s:get_version(base,i,dir)
    if a:dir =~ "^$" || a:dir =~ "^\\\./$"
-      return fnamemodify(a:base,":p") . s:get_ext(a:i)
+      return (s:hierarchical?fnamemodify(a:base,":p:gs?[:/\]?%?")."%":"") .
+        \ fnamemodify(a:base,":t") . s:get_ext(a:i)
    else
-      return a:dir . fnamemodify(a:base,":t") . s:get_ext(a:i)
+      return a:dir . (s:hierarchical?fnamemodify(a:base,":p:h:gs?[:/\]?%?")."%":"") .
+        \ fnamemodify(a:base,":t") . s:get_ext(a:i)
    endif
 endfunction
 
