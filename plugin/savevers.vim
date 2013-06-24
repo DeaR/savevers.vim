@@ -719,7 +719,7 @@ function! s:do_versdiff(parentbuf,dir,base,N,relative)
                setlocal noswapfile
                setlocal bufhidden=hide
                setlocal buftype=nofile
-               exe "silent read! cvs -Q log -b -N " . l:fname
+               exe "silent read! cvs -Q log -b -N " . escape(l:fname, "%")
                if v:shell_error
                   bw!
                else
@@ -748,7 +748,7 @@ function! s:do_versdiff(parentbuf,dir,base,N,relative)
          %d
          normal G
          call append(0,"--X--")
-         exe "silent 0read! cvs -Q update -p " . l:cvs_rev . " " . l:fname
+         exe "silent 0read! cvs -Q update -p " . l:cvs_rev . " " . escape(l:fname, "%")
          normal ']+dG
          let &autowrite = l:autowrite
          if v:shell_error
@@ -760,7 +760,7 @@ function! s:do_versdiff(parentbuf,dir,base,N,relative)
          %d
          normal G
          call append(0,"--X--")
-         exe "0read " . l:fname
+         exe "0read " . escape(l:fname, "%")
          normal ']+dG
       endif
    else
@@ -768,10 +768,10 @@ function! s:do_versdiff(parentbuf,dir,base,N,relative)
       setlocal buftype=
       if l:reusewin > 0
          let l:delbuf = bufnr("%")
-         exec "silent edit! " . l:fname
+         exec "silent edit! " . escape(l:fname, "%")
          silent! exec "silent! bd! " . l:delbuf
       else
-         exec "silent edit! " . l:fname
+         exec "silent edit! " . escape(l:fname, "%")
       endif
    endif
    setlocal nomodifiable
