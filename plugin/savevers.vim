@@ -243,10 +243,10 @@ endfunction
 
 function! s:get_version(base,i,dir)
    if a:dir =~ "^$" || a:dir =~ "^\\\./$"
-      return (s:hierarchical?fnamemodify(a:base,":p:gs?[:/\]?%?")."%":"") .
+      return (s:hierarchical?fnamemodify(a:base,":p:gs?[:/\\\\]?%?")."%":"") .
         \ fnamemodify(a:base,":t") . s:get_ext(a:i)
    else
-      return a:dir . (s:hierarchical?fnamemodify(a:base,":p:h:gs?[:/\]?%?")."%":"") .
+      return a:dir . (s:hierarchical?fnamemodify(a:base,":p:h:gs?[:/\\\\]?%?")."%":"") .
         \ fnamemodify(a:base,":t") . s:get_ext(a:i)
    endif
 endfunction
@@ -467,7 +467,7 @@ function! s:next_versdir(base)
       if !strlen(l:dir)
          continue
       endif
-      if match(l:dir,"/$") < 0
+      if match(l:dir,"[/\\\\]$") < 0
          let l:dir = l:dir . "/"
       endif
       let l:dir = substitute(l:dir,"/\\\./","/","g")
